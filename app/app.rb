@@ -1,13 +1,11 @@
 require 'sinatra'
-
-class Chef
-  module Dashboard
-    VERSION = "1.2.3"
-  end
-end
+require 'dashboard'
 
 set :haml, :layout => :application_layout
 
 get '/' do
   haml :index
+end
+
+post '/report' do
 end
