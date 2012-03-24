@@ -1,20 +1,33 @@
 require 'sequel'
+require 'dashboard'
 require 'db/schema'
-require 'db/validator'
 
-class Chef
-  module Dashboard
-    class DB
+class Chef::Dashboard::DB 
 
+  def initialize(dsn)
+    Sequel::Model.db = Sequel.connect(dsn)
+    require_models
+  end
+
+  def create_schema
+    Schema.create(Sequel::Model.db)
+  end
+
+  def require_models
+    models_files = "#{File.expand_path(File.dirname(__FILE__))}/db/models/*"
+    Dir[models_files].each do |x|
+      require x
+    end
+  end
+end
+
+__END__
       attr_reader :db
 
       def initialize(dsn)
         @db = Sequel.connect(dsn)
       end
 
-      def create_schema
-        Schema.create(db)
-      end
 
       def insert_report(report)
         res, messages = Validator.validate_report(report)

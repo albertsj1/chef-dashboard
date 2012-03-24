@@ -23,8 +23,8 @@ class TestDB < MiniTest::Unit::TestCase
       ]
     }
 
-    node_id = db.insert_report(report)
+    node_id = Node.insert(:name => report[:name], :fqdn => report[:fqdn], :ipaddress => report[:ipaddress])
 
-    db[:nodes].filter(:id => node_id)
+    assert(Node[node_id])
   end
 end
