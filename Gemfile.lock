@@ -2,6 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     haml (3.1.2)
+    highline (1.6.11)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -20,6 +21,7 @@ PLATFORMS
 
 DEPENDENCIES
   haml
+  highline
   sequel
   shotgun
   sinatra

@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+$:.unshift 'lib'
+require 'db'
+require 'highline'
+
+if HighLine.new.ask("Remove database? ")
+  require 'fileutils'
+  include FileUtils::Verbose
+  rm_f 'dashboard.db'
+end
+
+Chef::Dashboard::DB.new("sqlite://dashboard.db").create_schema
