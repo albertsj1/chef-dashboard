@@ -2,7 +2,7 @@
 
 require 'bundler/setup'
 $:.unshift File.expand_path('lib')
-require 'db/schema'
+require 'db'
 require 'highline'
 
 if HighLine.new.ask("Remove database? ")
