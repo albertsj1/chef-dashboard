@@ -11,7 +11,7 @@ class Chef
           end
 
           def create_nodes(db)
-            db.create_table('nodes') do
+            db.create_table(:nodes) do
               primary_key :id
               String :name, :index => true
               String :fqdn, :index => true

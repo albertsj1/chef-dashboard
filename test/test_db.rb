@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestDB < MiniTest::Unit::TestCase
+class TestDB < TestHelper
 
   attr_reader :db
 
@@ -13,7 +13,7 @@ class TestDB < MiniTest::Unit::TestCase
   end
 
   def test_fart
-    report = {
+    report_hash = {
       :name => "fart",
       :fqdn => "fart.int.example.com",
       :ipaddress => "127.0.0.1",
@@ -23,8 +23,16 @@ class TestDB < MiniTest::Unit::TestCase
       ]
     }
 
-    node_id = Node.insert(:name => report[:name], :fqdn => report[:fqdn], :ipaddress => report[:ipaddress])
-
-    assert(Node[node_id])
+    db.transaction do
+      node = Node.create(:name => report_hash[:name], :fqdn => report_hash[:fqdn], :ipaddress => report_hash[:ipaddress])
+      report = node.add_report(Report.create(:success => true, :created_at => DateTime.now))
+      report_hash[:resources].each do |resource|
+        report.add_resource(Resource.create(:resource => resource))
+      end
+      node.save
+      assert(node)
+      assert_equal(node.reports.count, 1)
+      assert_equal(report.resources.count, 1)
+    end
   end
 end

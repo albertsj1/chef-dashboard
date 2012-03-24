@@ -1,12 +1,17 @@
+require 'minitest/unit'
+
 require 'db'
 require 'tempfile'
 require 'fileutils'
 
-def create_db
-  file = Tempfile.new('chef-dashboard')
-  db = Chef::Dashboard::DB.new("sqlite://#{file.path}")
-  db.create_schema
-  return db, file.path
+class TestHelper < MiniTest::Unit::TestCase
+  def create_db
+    file = Tempfile.new('chef-dashboard')
+    db = Chef::Dashboard::DB.new("sqlite://#{file.path}", false)
+    db.create_schema
+    db.require_models
+    return db, file.path
+  end
 end
 
 require 'minitest/autorun'
