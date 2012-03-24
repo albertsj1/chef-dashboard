@@ -1,6 +1,33 @@
 %head
-  %title This is the title
+  %title 
+    Chef Dashboard - Version
+    = Chef::Dashboard::VERSION
+  %head
+    %script{:type => "text/javascript", :src => "/assets/js/jquery.js"}
+    %script{:type => "text/javascript", :src => "/assets/js/bootstrap.min.js"}
+    %link{:type => "text/css", :rel => "stylesheet", :href => "/assets/css/bootstrap.min.css"}
 %body
-  =yield
-  %p this is another paragraph
-  %iframe{:src => "fart.html"}
+  %div.navbar.navbar-fixed-top
+    %div.navbar-inner
+      %div.container-fluid
+        -#%a.btn.btn-navbar{"data-toggle" => "collpase", "data-target" => ".nav-collpase"}
+          -#.icon-bar
+          -#.icon-bar
+          -#.icon-bar
+        %a.brand{:href => "/"} 
+          Chef Dashboard v#{Chef::Dashboard::VERSION}
+        %div.nav-collapse
+          %ul.nav
+            %li.active
+              %a{:href => "/"} Home
+            %li
+              %a{:href => "/"} Nodes
+          %p.navbar-text.pull-right
+            %a{:href => "#"} Credits
+          %span.divider-vertical.pull-right
+          %p.navbar-text.pull-right
+            120 reporting nodes
+  %div.well-large
+    %div.container-fluid.well-large
+      %div.row-fluid
+        = yield

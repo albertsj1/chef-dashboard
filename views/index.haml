@@ -1,1 +1,20 @@
-%h3 this is the index
+%div.span3
+  %div.well.sidebar-nav
+    %ul.nav.nav-list
+      %li.nav-header Failed Groups
+      %li 
+        %a{:href => "#"} 10 nodes
+      %li
+        %a{:href => "#"} 2 nodes
+      %li.nav-header 
+        %a{:href => "#"} 20 Unresponsive Nodes - Last Hour
+      %li.nav-header 
+        %a{:href => "#"} 10 Unresponsive Nodes - Last 6 Hours
+      %li.nav-header
+        %a{:href => "#"} Responsive Nodes
+
+%div.span9
+  %div.hero-unit
+    %h1{:align => "center"} 120 Nodes - 80 pass, 40 fail
+    %p{:align => "center"}
+      Last Reporting Node: [this.node.fqdn] - 30 seconds ago
