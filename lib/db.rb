@@ -1,4 +1,5 @@
 require 'sequel'
+require 'db/schema'
 
 class Chef
   module Dashboard

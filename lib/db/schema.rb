@@ -1,5 +1,3 @@
-require 'db'
-
 module Chef::Dashboard::DB::Schema
   class << self
 
