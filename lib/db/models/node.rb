@@ -44,6 +44,10 @@ class Node < Sequel::Model
 
   end
 
+  def last_run_success?
+    reports.sort_by { |x| x.created_at }.last.success
+  end
+
   def self.reporting_nodes
     nodes = Node.join_table(:inner, :reports, :node_id => :id).
       filter(

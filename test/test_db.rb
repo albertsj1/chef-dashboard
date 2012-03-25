@@ -1,19 +1,8 @@
 require 'helper'
 
-class TestDB < TestHelper
+class TestDB < DashboardTestCase
 
-  attr_reader :db
-
-  def setup
-    @db, @path = create_db
-  end
-
-  def teardown
-    @db.db.disconnect
-    FileUtils.rm_f @path
-  end
-
-  def test_reporting_nodes
+  def get_report_hash
     report_hash = {
       "name" => "fart",
       "fqdn" => "fart.int.example.com",
@@ -23,6 +12,10 @@ class TestDB < TestHelper
         "execute[I farted]"
       ]
     }
+  end
+
+  def test_reporting_nodes
+    report_hash = get_report_hash
 
     node = Node.create_report(report_hash)
 
@@ -38,16 +31,23 @@ class TestDB < TestHelper
     assert_equal(Node.reporting_nodes.count, 1)
   end
 
+  def test_last_run_success
+    report_hash = get_report_hash
+
+    node = Node.create_report(report_hash)
+    assert(node.last_run_success?)
+
+    node = Node.create_report(report_hash)
+    assert(node.last_run_success? == true) # as opposed to ... Array
+
+    report_hash["success"] = false
+
+    node = Node.create_report(report_hash)
+    assert(!node.last_run_success?)
+  end
+
   def test_report_create
-    report_hash = {
-      "name" => "fart",
-      "fqdn" => "fart.int.example.com",
-      "ipaddress" => "127.0.0.1",
-      "success" => true,
-      "resources" => [
-        "execute[I farted]"
-      ]
-    }
+    report_hash = get_report_hash
 
     node = Node.create_report(report_hash)
     assert(node)
@@ -86,7 +86,6 @@ class TestDB < TestHelper
     }
     
     assert_raises(ArgumentError) { Node.create_report(report_hash) }
-
-    # FIXME more tests for invalid data
   end
+
 end

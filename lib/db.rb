@@ -27,4 +27,9 @@ class Chef::Dashboard::DB
     @db.transaction(&block)
   end
 
+  def disconnect
+    @db.disconnect
+    Sequel::Model.db = nil
+  end
+
 end
