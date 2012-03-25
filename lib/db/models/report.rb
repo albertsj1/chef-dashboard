@@ -4,6 +4,13 @@ class Report < Sequel::Model
   one_to_many :resources
   many_to_one :node
 
+  plugin :validation_helpers
+
+  def validate
+    super
+    validates_presence(:success, :allow_nil => false)
+  end
+
   def resources=(resources)
     save unless id
     remove_all_resources 

@@ -12,6 +12,10 @@ get '/' do
   haml :index
 end
 
+get '/nodes' do
+  haml :nodes
+end
+
 put '/report' do
   Node.create_report(Yajl.load(request.body.read))
   return 200
