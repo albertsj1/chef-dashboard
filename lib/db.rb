@@ -6,10 +6,10 @@ class Chef::Dashboard::DB
 
   attr_reader :db
 
-  def initialize(dsn, require_models = true)
+  def initialize(dsn, do_require_models = true)
     Sequel.connect(dsn)
     @db = Sequel::Model.db 
-    require_models if require_models
+    require_models if do_require_models
   end
 
   def create_schema
