@@ -25,6 +25,7 @@
 
 %div.span9
   %div.hero-unit
-    %h1{:align => "center"} 120 Nodes - 80 pass, 40 fail
+    %h1{:align => "center"} 
+      Nodes - #{@nodes.count}: #{@success.count} pass, #{@failure.count} fail
     %p{:align => "center"}
-      Last Reporting Node: [this.node.fqdn] - 30 seconds ago
+      Last Reporting Node: [#{@last_node[:fqdn]}] - #{@last_node.last_report.created_at}

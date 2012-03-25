@@ -45,15 +45,26 @@ class Node < Sequel::Model
   end
 
   def last_run_success?
-    reports.sort_by { |x| x.created_at }.last.success
+    unless reports.empty?
+      return last_report.success
+    end
+    
+    return false
   end
 
   def self.reporting_nodes
-    nodes = Node.join_table(:inner, :reports, :node_id => :id).
-      filter(
-        "reports.created_at BETWEEN :x and :y", 
-        :x => DateTime.now - 3600, 
-        :y => DateTime.now
-      )
+    Node.with_sql(
+      %[
+        select distinct(nodes.id), nodes.* 
+        from nodes 
+          inner join reports on nodes.id = reports.node_id 
+        where reports.created_at BETWEEN :x and :y
+        group by nodes.id
+      ], :x => DateTime.now - 3600, :y => DateTime.now
+    )
+  end
+
+  def last_report
+    reports.sort_by { |x| x.created_at }.last
   end
 end
