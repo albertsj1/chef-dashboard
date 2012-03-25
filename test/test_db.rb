@@ -12,7 +12,7 @@ class TestDB < TestHelper
     FileUtils.rm_f @path
   end
 
-  def test_fart
+  def test_report_create
     report_hash = {
       :name => "fart",
       :fqdn => "fart.int.example.com",
@@ -23,16 +23,22 @@ class TestDB < TestHelper
       ]
     }
 
+    @node_id = nil
+
     db.transaction do
-      node = Node.create(:name => report_hash[:name], :fqdn => report_hash[:fqdn], :ipaddress => report_hash[:ipaddress])
-      report = node.add_report(Report.create(:success => true, :created_at => DateTime.now))
-      report_hash[:resources].each do |resource|
-        report.add_resource(Resource.create(:resource => resource))
-      end
-      node.save
+      node = Node.create_report(report_hash)
+
       assert(node)
       assert_equal(node.reports.count, 1)
-      assert_equal(report.resources.count, 1)
+      assert_equal(node.reports.first.resources.count, 1)
+
+      @node_id = node.id
     end
+
+    node = Node[@node_id]
+
+    assert(node)
+    assert_equal(node.reports.count, 1)
+    assert_equal(node.reports.first.resources.count, 1)
   end
 end

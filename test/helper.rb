@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'minitest/unit'
 
 require 'db'
