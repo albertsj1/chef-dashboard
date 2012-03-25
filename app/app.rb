@@ -10,12 +10,8 @@ set :haml, :layout => :application_layout
 
 get '/' do
   @nodes = Node.reporting_nodes.all
-  p @nodes
   @success, @failure = @nodes.partition(&:last_run_success?)
-
   @last_node = @nodes.sort_by { |x| x.last_report.created_at }.last
-
-  p @last_node
 
   haml :index
 end
