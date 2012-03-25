@@ -43,4 +43,13 @@ class Node < Sequel::Model
     node
 
   end
+
+  def self.reporting_nodes
+    nodes = Node.join_table(:inner, :reports, :node_id => :id).
+      filter(
+        "reports.created_at BETWEEN :x and :y", 
+        :x => DateTime.now - 3600, 
+        :y => DateTime.now
+      )
+  end
 end
