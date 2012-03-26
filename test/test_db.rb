@@ -14,6 +14,47 @@ class TestDB < DashboardTestCase
     }
   end
 
+  def test_group_by_execution
+    report_hash = get_report_hash 
+    Node.create_report(report_hash)
+
+    %w[poop foo].each do |x|
+      report_hash["name"] = x
+      report_hash["fqdn"] = "#{x}.int.example.com"
+      Node.create_report(report_hash)
+    end
+
+    %w[bar baz quux].each do |x|
+      report_hash["name"] = x
+      report_hash["fqdn"] = "#{x}.int.example.com"
+      report_hash["success"] = false
+      Node.create_report(report_hash)
+    end
+
+    breakdown = Node.group_by_execution
+
+    assert_equal(breakdown["success"].map(&:name).sort, %w[fart foo poop])
+    assert_equal(breakdown[["execute[I farted]"]].map(&:name).sort, %w[bar baz quux])
+
+    %w[bar quux].each do |x|
+      report_hash["name"] = x
+      report_hash["fqdn"] = "#{x}.int.example.com"
+      report_hash["success"] = false
+      report_hash["resources"] = [
+        "execute[I farted]",
+        "bash[shiiiit]"
+      ]
+
+      Node.create_report(report_hash)
+    end
+
+    breakdown = Node.group_by_execution
+
+    assert_equal(breakdown["success"].map(&:name).sort, %w[fart foo poop])
+    assert_equal(breakdown[["execute[I farted]"]].map(&:name).sort, %w[baz])
+    assert_equal(breakdown[["bash[shiiiit]", "execute[I farted]"]].map(&:name).sort, %w[bar quux])
+  end
+
   def test_reporting_nodes
     report_hash = get_report_hash
 
