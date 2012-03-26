@@ -12,6 +12,7 @@ get '/' do
   @nodes = Node.reporting_nodes.all
   @success, @failure = @nodes.partition(&:last_run_success?)
   @last_node = @nodes.sort_by { |x| x.last_report.created_at }.last
+  @groups = Node.group_by_execution
 
   haml :index
 end

@@ -70,7 +70,9 @@ class Node < Sequel::Model
 
   def self.group_by_execution
     success, failure = Node.reporting_nodes.partition { |x| x.last_run_success? }
-    failure_breakdown = failure.group_by { |x| x.last_report.resources.map(&:resource).sort } 
-    return { "success" => success }.merge(failure_breakdown)
+    breakdown_proc = proc { |x| x.last_report.resources.map(&:resource).sort } 
+    failure_breakdown = failure.group_by(&breakdown_proc)
+    success_breakdown = success.group_by(&breakdown_proc)
+    return { "success" => success_breakdown, "failure" => failure_breakdown }
   end
 end

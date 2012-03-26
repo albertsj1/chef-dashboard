@@ -33,8 +33,8 @@ class TestDB < DashboardTestCase
 
     breakdown = Node.group_by_execution
 
-    assert_equal(breakdown["success"].map(&:name).sort, %w[fart foo poop])
-    assert_equal(breakdown[["execute[I farted]"]].map(&:name).sort, %w[bar baz quux])
+    assert_equal(breakdown["success"][["execute[I farted]"]].map(&:name).sort, %w[fart foo poop])
+    assert_equal(breakdown["failure"][["execute[I farted]"]].map(&:name).sort, %w[bar baz quux])
 
     %w[bar quux].each do |x|
       report_hash["name"] = x
@@ -50,9 +50,9 @@ class TestDB < DashboardTestCase
 
     breakdown = Node.group_by_execution
 
-    assert_equal(breakdown["success"].map(&:name).sort, %w[fart foo poop])
-    assert_equal(breakdown[["execute[I farted]"]].map(&:name).sort, %w[baz])
-    assert_equal(breakdown[["bash[shiiiit]", "execute[I farted]"]].map(&:name).sort, %w[bar quux])
+    assert_equal(breakdown["success"][["execute[I farted]"]].map(&:name).sort, %w[fart foo poop])
+    assert_equal(breakdown["failure"][["execute[I farted]"]].map(&:name).sort, %w[baz])
+    assert_equal(breakdown["failure"][["bash[shiiiit]", "execute[I farted]"]].map(&:name).sort, %w[bar quux])
   end
 
   def test_reporting_nodes
