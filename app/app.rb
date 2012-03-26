@@ -14,6 +14,11 @@ get '/' do
   @last_node = @nodes.sort_by { |x| x.last_report.created_at }.last
   @groups = Node.group_by_execution
 
+  @failure_groups = @groups["failure"].keys.sort_by(&:count).reverse
+  @success_groups = @groups["success"].keys.sort_by(&:count).reverse
+
+  p @failure_groups
+
   haml :index
 end
 

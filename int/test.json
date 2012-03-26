@@ -2,7 +2,7 @@
   "name": "test",
   "fqdn": "test.int.example.com",
   "ipaddress": "127.0.0.1",
-  "success": true,
+  "success": false,
   "resources": [
     "execute[I farted]"
   ]

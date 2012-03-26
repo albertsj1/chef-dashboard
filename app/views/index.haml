@@ -2,6 +2,22 @@
   %div.well.sidebar-nav
     %ul.nav.nav-list
       %li.nav-header Failed Groups
+      - @failure_groups.each_with_index do |key, i|
+        %li
+          %a{:href => "javascript:$(\".failure_#{i}\").toggle();"} #{@groups["failure"][key].count} nodes
+          %ul
+            %li Resources:
+            %li
+              %ul
+                - key.each do |resource|
+                  %li=resource
+          %ul{:class => "hidden failure_#{i}"}
+            %li Nodes
+            %li
+              %ul
+              - @groups["failure"][key].each do |machine|
+                %li
+                  %a{:href => "#"}=machine.name
       %li 
         %a{:href => "#"} 10 nodes
       %li
