@@ -55,21 +55,21 @@ class Node < Sequel::Model
   def self.reporting_nodes
     Node.with_sql(
       %[
-        select distinct(nodes.id), nodes.* 
+        select distinct(nodes.id), nodes.*, reports.node_id, reports.success, reports.created_at
         from nodes 
           inner join reports on nodes.id = reports.node_id 
         where reports.created_at BETWEEN :x and :y
         group by nodes.id
-      ], :x => DateTime.now - 3600, :y => DateTime.now
+      ], :x => DateTime.now - Rational(1, 24), :y => DateTime.now
     )
   end
 
   def last_report
-    reports.sort_by { |x| x.created_at }.last
+    reports(:order => [:created_at, :desc], :limit => 1).first
   end
 
   def self.group_by_execution
-    success, failure = Node.reporting_nodes.partition { |x| x.last_run_success? }
+    success, failure = Node.reporting_nodes.partition(&:last_run_success?)
     breakdown_proc = proc { |x| x.last_report.resources.map(&:resource).sort } 
     failure_breakdown = failure.group_by(&breakdown_proc)
     success_breakdown = success.group_by(&breakdown_proc)

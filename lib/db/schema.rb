@@ -23,7 +23,7 @@ class Chef
             db.create_table(:reports) do
               primary_key :id
               Integer :node_id, :index => true
-              DateTime :created_at
+              DateTime :created_at, :index => true
               TrueClass :success
               index %w[node_id created_at]
             end

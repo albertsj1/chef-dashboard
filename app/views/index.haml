@@ -2,9 +2,9 @@
   %div.well.sidebar-nav
     %ul.nav.nav-list
       %li.nav-header Failed Groups
-      - @failure_groups.each_with_index do |key, i|
+      - @failure_groups.each_with_index do |(key, value), i|
         %li
-          %a{:onclick => "$(\".failure_#{i}\").toggle();"} #{@groups["failure"][key].count} nodes
+          %a{:onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
           %ul{:class => "hidden failure_#{i}"}
             %li Resources:
             %ul
@@ -13,7 +13,7 @@
           %ul{:class => "hidden failure_#{i}"}
             %li Nodes
             %ul
-              - @groups["failure"][key].each do |machine|
+              - value.each do |machine|
                 %li
                   %a{:href => "#"}=machine.name
       %li.nav-header 

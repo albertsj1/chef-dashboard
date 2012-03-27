@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'faker'
+$:.unshift 'lib'
+require 'db'
+
+db = Chef::Dashboard::DB.new("sqlite://dashboard.db")
+
+resources = [
+  "bash[hello yes]",
+  "package[longcat-is-long]",
+  "execute[i kiss you!]",
+  "file[/dev/null]"
+]
+
+domain = Faker::Internet.domain_name
+
+100.times do
+  db.transaction do
+    name = Faker::Name.first_name.downcase
+    ipaddress = Faker::Internet.ip_v4_address
+    100.times do
+      report_hash = { 
+        "name" => name,
+        "fqdn" => "#{name}.int.#{domain}",
+        "ipaddress" => ipaddress,
+        "success" => rand(3).to_i > 1,
+        "resources" => (0..rand(resources.size + 1).to_i).map { resources.sample }.uniq
+      }
+
+      node = Node.create_report(report_hash)
+      node.last_report.update(:created_at => DateTime.now - Rational(rand(24).to_i, rand(48).to_i + 24))
+    end
+  end
+end

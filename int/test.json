@@ -1,9 +1,10 @@
 {
-  "name": "test",
-  "fqdn": "test.int.example.com",
+  "name": "test3",
+  "fqdn": "test3.int.example.com",
   "ipaddress": "127.0.0.1",
   "success": false,
   "resources": [
-    "execute[I farted]"
+    "execute[I farted]",
+    "bash[foo]"
   ]
 }
