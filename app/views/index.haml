@@ -4,24 +4,18 @@
       %li.nav-header Failed Groups
       - @failure_groups.each_with_index do |key, i|
         %li
-          %a{:href => "javascript:$(\".failure_#{i}\").toggle();"} #{@groups["failure"][key].count} nodes
-          %ul
+          %a{:onclick => "$(\".failure_#{i}\").toggle();"} #{@groups["failure"][key].count} nodes
+          %ul{:class => "hidden failure_#{i}"}
             %li Resources:
-            %li
-              %ul
-                - key.each do |resource|
-                  %li=resource
+            %ul
+              - key.each do |resource|
+                %li=resource
           %ul{:class => "hidden failure_#{i}"}
             %li Nodes
-            %li
-              %ul
+            %ul
               - @groups["failure"][key].each do |machine|
                 %li
                   %a{:href => "#"}=machine.name
-      %li 
-        %a{:href => "#"} 10 nodes
-      %li
-        %a{:href => "#"} 2 nodes
       %li.nav-header 
         %a{:href => "#"} 20 Unresponsive Nodes - Last Hour
       %li.nav-header 
@@ -42,6 +36,8 @@
 %div.span9
   %div.hero-unit
     %h1{:align => "center"} 
-      Nodes - #{@nodes.count}: #{@success.count} pass, #{@failure.count} fail
+      Nodes - #{$nodes.count}: #{@success.count} pass, #{@failure.count} fail
     %p{:align => "center"}
       Last Reporting Node: [#{@last_node[:fqdn] rescue "none"}] - #{@last_node.last_report.created_at rescue "nil"}
+:javascript
+  $(".hidden").hide();

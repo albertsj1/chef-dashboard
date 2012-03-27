@@ -6,18 +6,16 @@ require 'db'
 
 $db = Chef::Dashboard::DB.new("sqlite://dashboard.db")
 
+$nodes = Node.reporting_nodes.all
 set :haml, :layout => :application_layout
 
 get '/' do
-  @nodes = Node.reporting_nodes.all
-  @success, @failure = @nodes.partition(&:last_run_success?)
-  @last_node = @nodes.sort_by { |x| x.last_report.created_at }.last
+  @success, @failure = $nodes.partition(&:last_run_success?)
+  @last_node = $nodes.sort_by { |x| x.last_report.created_at }.last
   @groups = Node.group_by_execution
 
-  @failure_groups = @groups["failure"].keys.sort_by(&:count).reverse
-  @success_groups = @groups["success"].keys.sort_by(&:count).reverse
-
-  p @failure_groups
+  @failure_groups = @groups["failure"].keys.sort_by(&:count)
+  @success_groups = @groups["success"].keys.sort_by(&:count)
 
   haml :index
 end
