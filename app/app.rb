@@ -6,10 +6,11 @@ require 'db'
 
 $db = Chef::Dashboard::DB.new("sqlite://dashboard.db")
 
-$nodes = Node.reporting_nodes.all
 set :haml, :layout => :application_layout
 
 get '/' do
+  $nodes = @nodes = Node.reporting_nodes.all #FIXME remove $nodes
+  p @nodes
   @success, @failure = $nodes.partition(&:last_run_success?)
   @last_node = $nodes.sort_by { |x| x.last_report.created_at }.last
   @groups = Node.group_by_execution

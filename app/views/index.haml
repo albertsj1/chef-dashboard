@@ -4,7 +4,7 @@
       %li.nav-header Failed Groups
       - @failure_groups.each_with_index do |(key, value), i|
         %li
-          %a{:onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
+          %a{:href => "#", :onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
           %ul{:class => "hidden failure_#{i}"}
             %li Resources:
             %ul
