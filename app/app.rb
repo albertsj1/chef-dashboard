@@ -4,6 +4,7 @@ require 'yajl'
 require 'dashboard'
 require 'db'
 
+# FIXME configuration
 $db = Chef::Dashboard::DB.new({ :adapter => "sqlite3", :database => "dashboard.db" })
 
 set :haml, :layout => :application_layout
@@ -11,7 +12,7 @@ set :haml, :layout => :application_layout
 get '/' do
   @nodes = Node.reporting_nodes
   @success, @failure = @nodes.partition(&:last_run_success?)
-  @last_node = @nodes.sort_by { |x| x.last_report.created_at }.last
+  @last_node = Node.all.sort_by { |x| x.last_report.created_at }.last
   @groups = Node.group_by_execution
 
   @last_hour_unreporting = Node.reporting_nodes(2.hours.ago, 1.hour.ago)
@@ -25,6 +26,14 @@ get '/' do
 end
 
 get '/nodes' do
+  @nodes = Node.reporting_nodes
+
+  if params["last_report_in_hours"]
+    @reporting_nodes = Node.reporting_nodes(params["last_report_in_hours"].to_i.hours.ago, 0.hours.ago)
+  else
+    @reporting_nodes = @nodes
+  end
+
   haml :nodes
 end
 

@@ -21,14 +21,16 @@ domain = Faker::Internet.domain_name
     name = Faker::Name.first_name.downcase
     ipaddress = Faker::Internet.ip_v4_address
 
-    report_hash = { 
-        "name" => name,
-        "fqdn" => "#{name}.int.#{domain}",
-        "ipaddress" => ipaddress,
-        "success" => rand(3).to_i > 1,
-        "resources" => (0..rand(resources.size + 1).to_i).map { resources.sample }.uniq
-    }
+    100.times do 
+      report_hash = { 
+          "name" => name,
+          "fqdn" => "#{name}.int.#{domain}",
+          "ipaddress" => ipaddress,
+          "success" => rand(3).to_i > 1,
+          "resources" => (0..rand(resources.size + 1).to_i).map { resources.sample }.uniq
+      }
 
-    node = Node.create_report(report_hash, rand(24).to_i.hours.ago)
+      node = Node.create_report(report_hash, rand(48).to_i.hours.ago)
+    end
   end
 end

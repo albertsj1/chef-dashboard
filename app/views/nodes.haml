@@ -1,0 +1,15 @@
+%div.span2
+  %div.row-fluid
+    %form{:method => "get", :action => "/nodes"}
+      %label Last Reporting Time (hours)
+      %select{:name => "last_report_in_hours"}
+        -# FIXME make this configurable.
+        - [1, 6, 12, 24, 48].each do |num|
+          %option{:value => num, :selected => params["last_report_in_hours"].to_i == num ? true : false}=num
+      %input{:type => "submit", :value => "Submit"}
+%div.span10
+  %div.row-fluid
+    %div.well
+      %ul
+        - @reporting_nodes.each do |node|
+          %li=node.name
