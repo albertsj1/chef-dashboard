@@ -1,5 +1,3 @@
-require 'db'
-
 class Report < ActiveRecord::Base
   has_many :resources
   has_one :node

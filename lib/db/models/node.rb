@@ -1,5 +1,3 @@
-require 'db'
-
 class Node < ActiveRecord::Base
   has_many :reports
 
