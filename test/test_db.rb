@@ -125,16 +125,13 @@ class TestDB < MiniTest::Unit::TestCase
       "resources" => []
     }
 
-  end
-end
-__END__
-    assert_raises(Sequel::ValidationFailed) { Node.create_report(report_hash) }
+    assert_raises(ActiveRecord::RecordInvalid) { Node.create_report(report_hash) }
 
     # remove a random key (other than the resources array because that is
     # checked differently) from the report hash
     report_hash.delete(report_hash.keys.reject { |x| x == "resources" }.sample)
 
-    assert_raises(Sequel::ValidationFailed) { Node.create_report(report_hash) }
+    assert_raises(ActiveRecord::RecordInvalid) { Node.create_report(report_hash) }
     
     report_hash = {
       "name" => "fart",

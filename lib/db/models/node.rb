@@ -3,12 +3,11 @@ require 'db'
 class Node < ActiveRecord::Base
   has_many :reports
 
-  #def validate
-    #super
-    #validates_presence([:name, :fqdn, :ipaddress], :allow_nil => false)
-    #validates_unique([:name, :fqdn])
-    #validates_unique(:name)
-  #end
+  validates_presence_of :name
+  validates_presence_of :fqdn
+  validates_presence_of :ipaddress
+  validates_uniqueness_of [:name, :fqdn]
+  validates_uniqueness_of :name
 
   def self.create_report(report_hash)
 
@@ -35,7 +34,7 @@ class Node < ActiveRecord::Base
         :resources  => report_hash['resources'].map { |x| Resource.new(:resource => x) }
       )
 
-    node.save
+    node.save!
     node
   end
 

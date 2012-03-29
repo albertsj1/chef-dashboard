@@ -2,9 +2,6 @@ class Resource < ActiveRecord::Base
   self.table_name = :report_resources
   has_one :report
 
-  #def validate
-    #super
-    #validates_presence(:resource, :allow_nil => false)
-    #validates_format(/^[^\[]+\[[^\]]+\]$/, :resource)
-  #end
+  validates_presence_of :resource
+  validates_format_of :resource, :with => /^[^\[]+\[[^\]]+\]$/
 end
