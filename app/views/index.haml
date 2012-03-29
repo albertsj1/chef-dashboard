@@ -36,7 +36,7 @@
 %div.span9
   %div.hero-unit
     %h1{:align => "center"} 
-      Nodes - #{$nodes.count}: #{@success.count} pass, #{@failure.count} fail
+      Nodes - #{@nodes.count}: #{@success.count} pass, #{@failure.count} fail
     %p{:align => "center"}
       Last Reporting Node: [#{@last_node[:fqdn] rescue "none"}] - #{@last_node.last_report.created_at rescue "nil"}
 :javascript

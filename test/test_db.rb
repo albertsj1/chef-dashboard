@@ -1,6 +1,20 @@
 require 'helper'
+require 'db'
+require 'tempfile'
+require 'fileutils'
 
-class TestDB < DashboardTestCase
+class TestDB < MiniTest::Unit::TestCase
+
+  def setup
+    $db_file = Tempfile.new('chef-dashboard')
+    $db = Chef::Dashboard::DB.new({ :adapter => "sqlite3", :database => $db_file.path }, false)
+    $db.migrate(true)
+    $db.require_models
+  end
+
+  def teardown
+    FileUtils.rm_f $db_file
+  end
 
   def get_report_hash
     report_hash = {
@@ -67,7 +81,7 @@ class TestDB < DashboardTestCase
 
     assert_equal(Node.reporting_nodes.count, 2)
 
-    node2.reports.last.update(:created_at => DateTime.now - 4000)
+    node2.reports.last.update_attributes(:created_at => DateTime.now - 4000)
 
     assert_equal(Node.reporting_nodes.count, 1)
   end
@@ -95,7 +109,7 @@ class TestDB < DashboardTestCase
     assert_equal(node.reports.count, 1)
     assert_equal(node.reports.first.resources.count, 1)
 
-    node = Node[node.id]
+    node = Node.find(node.id)
 
     assert(node)
     assert_equal(node.reports.count, 1)
@@ -111,6 +125,9 @@ class TestDB < DashboardTestCase
       "resources" => []
     }
 
+  end
+end
+__END__
     assert_raises(Sequel::ValidationFailed) { Node.create_report(report_hash) }
 
     # remove a random key (other than the resources array because that is

@@ -2,7 +2,7 @@ source :rubygems
 
 gem "sinatra"
 gem "haml"
-gem "sequel"
+gem "activerecord"
 gem "sqlite3"
 gem "highline"
 gem "yajl-ruby"

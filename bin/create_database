@@ -11,4 +11,4 @@ if HighLine.new.ask("Remove database? ")
   rm_f 'dashboard.db'
 end
 
-Chef::Dashboard::DB.new("sqlite://dashboard.db").create_schema
+Chef::Dashboard::DB.new({ :adapter => "sqlite3", :database => "dashboard.db" }).migrate

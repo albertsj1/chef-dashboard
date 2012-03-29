@@ -5,7 +5,7 @@ require 'faker'
 $:.unshift 'lib'
 require 'db'
 
-db = Chef::Dashboard::DB.new("sqlite://dashboard.db")
+db = Chef::Dashboard::DB.new({ :adapter => "sqlite3", :database => "dashboard.db" })
 
 resources = [
   "bash[hello yes]",
@@ -17,10 +17,10 @@ resources = [
 domain = Faker::Internet.domain_name
 
 100.times do
-  db.transaction do
+  ActiveRecord::Base.transaction do
     name = Faker::Name.first_name.downcase
     ipaddress = Faker::Internet.ip_v4_address
-    #100.times do
+    100.times do
       report_hash = { 
         "name" => name,
         "fqdn" => "#{name}.int.#{domain}",
@@ -30,7 +30,7 @@ domain = Faker::Internet.domain_name
       }
 
       node = Node.create_report(report_hash)
-      #node.last_report.update(:created_at => DateTime.now - Rational(rand(24).to_i, rand(48).to_i + 24))
-    #end
+      node.last_report.update_attributes(:created_at => DateTime.now - Rational(rand(24).to_i, rand(48).to_i + 24))
+    end
   end
 end
