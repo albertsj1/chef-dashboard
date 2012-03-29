@@ -7,7 +7,7 @@ class Node < ActiveRecord::Base
   validates_uniqueness_of [:name, :fqdn]
   validates_uniqueness_of :name
 
-  def self.create_report(report_hash)
+  def self.create_report(report_hash, created_at = DateTime.now)
 
     raise ArgumentError, "report_hash is not a Hash" unless report_hash.kind_of?(Hash)
     raise ArgumentError, "resources is not an Array" unless report_hash['resources'].kind_of?(Array)
@@ -28,7 +28,7 @@ class Node < ActiveRecord::Base
     node.reports << 
       Report.new(
         :success    => report_hash['success'], 
-        :created_at => DateTime.now, 
+        :created_at => created_at,
         :resources  => report_hash['resources'].map { |x| Resource.new(:resource => x) }
       )
 
@@ -40,24 +40,12 @@ class Node < ActiveRecord::Base
     return last_report.success
   end
 
-  def self.reporting_nodes
+  def self.reporting_nodes(min_time = 1.hour.ago, max_time = DateTime.now)
     Node.
       joins(:reports).
-      where("reports.created_at BETWEEN ? and ?", 1.day.ago, DateTime.now).
+      where("reports.created_at BETWEEN ? and ?", min_time, max_time).
       order("reports.created_at DESC").
       select("distinct(nodes.id), nodes.*")
-  end
-
-  def self.reporting_nodes_old
-    Node.with_sql(
-      %[
-        select distinct(nodes.id), nodes.*
-        from nodes 
-          inner join reports on nodes.id = reports.node_id 
-        where reports.created_at BETWEEN :x and :y
-        group by nodes.id
-      ], :x => DateTime.now - Rational(1, 24), :y => DateTime.now
-    )
   end
 
   def last_report

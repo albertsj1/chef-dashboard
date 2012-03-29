@@ -4,7 +4,7 @@
       %li.nav-header Failed Groups
       - @failure_groups.each_with_index do |(key, value), i|
         %li
-          %a{:href => "#", :onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
+          %a{:href => "javascript:void()", :onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
           %ul{:class => "hidden failure_#{i}"}
             %li Resources:
             %ul
@@ -17,20 +17,36 @@
                 %li
                   %a{:href => "#"}=machine.name
       %li.nav-header 
-        %a{:href => "#"} 20 Unresponsive Nodes - Last Hour
+        %a{:href => "javascript:void()", :onclick => '$(".hidden.last_hour_unreporting").toggle();'} #{@last_hour_unreporting.count} Unresponsive Nodes - Last Hour
+        %ul.hidden.last_hour_unreporting
+          - @last_hour_unreporting.each do |node|
+            %li
+              %a{:href => "#"}=node.name
       %li.nav-header 
-        %a{:href => "#"} 10 Unresponsive Nodes - Last 6 Hours
+        %a{:href => "javascript:void()", :onclick => '$(".hidden.last_six_unreporting").toggle();'} #{@last_six_unreporting.count} Unresponsive Nodes - Last 6 Hours
+        %ul.hidden.last_six_unreporting
+          - @last_six_unreporting.each do |node|
+            %li
+              %a{:href => "#"}=node.name
       %li.nav-header
-        %a{:href => "#"} Resource Breakdown
-      %li
-        %a{:href => "#"} 20 Recent Nodes 
-        %ul
-          %li execute[I farted]
-          %li bash[Some other resource]
-      %li
-        %a{:href => "#"} 10 Recent Nodes 
-        %ul
-          %li bash[Some other resource]
+        %a{:href => "javascript:void()", :onclick => '$(".resource_breakdown").toggle();'} Resource Breakdown
+      - @success_groups.each_with_index do |(key, value), i|
+        %li.hidden.resource_breakdown
+          %ul
+            %a{:href => "javascript:void()", :onclick => "$(\".success_#{i}\").toggle();"} #{value.count} Recent Nodes
+            %ul{:class => "hidden success_#{i}"}
+              %li
+                Nodes
+                %ul
+                  - value.each do |node|
+                    %li
+                      %a{:href => "#"}=node.name
+            %ul
+              - key.each do |resource|
+                %li=resource
+
+
+        
 
 
 %div.span9
