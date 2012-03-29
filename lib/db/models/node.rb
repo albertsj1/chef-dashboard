@@ -45,7 +45,8 @@ class Node < ActiveRecord::Base
       joins(:reports).
       where("reports.created_at BETWEEN ? and ?", min_time, max_time).
       order("reports.created_at DESC").
-      select("distinct(nodes.id), nodes.*").to_a
+      select("distinct(nodes.id), nodes.*").
+      to_a
   end
 
   def last_report

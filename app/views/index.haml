@@ -7,26 +7,34 @@
 
 %div.row-fluid
   %div.span4
-    %div.well
-      %h3 Failure Groups
-      %ul.nav.nav-list
+    %div.well.accordion
+      %h3
+        %center Failure Groups
+      %div.accordion-group
         - @failure_groups.each_with_index do |(key, value), i|
-          %li
-            %a{:href => "javascript:void()", :onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
-            %ul{:class => "hidden failure_#{i}"}
-              %li Resources:
-              %ul
-                - key.each do |resource|
-                  %li=resource
-            %ul{:class => "hidden failure_#{i}"}
-              %li Nodes
-              %ul
-                - value.each do |machine|
-                  %li
-                    %a{:href => "#"}=machine.name
+          %div.accordion-inner
+            %a.failure-link.accordion-heading{:href => "javascript:void()", "data-toggle" => "collapse", "data-target" => ".failure#{i}"} #{value.count} nodes
+          %div{:class => "failure#{i} collapse"}
+            %ul.nav.nav-tabs
+              %li.active
+                %a{"data-toggle" => "tab", "data-target" => "#failure#{i}resources"} Resources
+              %li
+                %a{"data-toggle" => "tab", "data-target" => "#failure#{i}nodes"} Nodes
+
+            %div.tab-content
+              %div.tab-pane.active{:id => "failure#{i}resources"}
+                %ul
+                  - key.each do |resource|
+                    %li=resource
+              %div.tab-pane{:id => "failure#{i}nodes"}
+                %ul
+                  - value.each do |node|
+                    %li=node.name
+
   %div.span4
     %div.well
-      %h3 Unreported Nodes
+      %h3
+        %center Unreported Nodes
       %ul.nav.nav-list
         -# FIXME abstract this crap
         %li.nav-header 
@@ -49,7 +57,8 @@
                 %a{:href => "#"}=node.name
   %div.span4
     %div.well
-      %h3 Resource Breakdown
+      %h3 
+        %center Resource Breakdown
       %ul.nav.nav-list
         %li.nav-header
         - @success_groups.each_with_index do |(key, value), i|
