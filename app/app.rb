@@ -16,6 +16,7 @@ get '/' do
 
   @last_hour_unreporting = Node.reporting_nodes(2.hours.ago, 1.hour.ago)
   @last_six_unreporting = Node.reporting_nodes(6.hours.ago, 1.hour.ago)
+  @last_day_unreporting = Node.reporting_nodes(1.day.ago, 1.hour.ago)
 
   @failure_groups = @groups["failure"].sort_by { |k,v| v.count }.reverse
   @success_groups = @groups["success"].sort_by { |k,v| v.count }.reverse

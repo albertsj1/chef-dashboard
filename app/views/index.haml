@@ -16,6 +16,7 @@
               - value.each do |machine|
                 %li
                   %a{:href => "#"}=machine.name
+      -# abstract this crap
       %li.nav-header 
         %a{:href => "javascript:void()", :onclick => '$(".hidden.last_hour_unreporting").toggle();'} #{@last_hour_unreporting.count} Unresponsive Nodes - Last Hour
         %ul.hidden.last_hour_unreporting
@@ -26,6 +27,12 @@
         %a{:href => "javascript:void()", :onclick => '$(".hidden.last_six_unreporting").toggle();'} #{@last_six_unreporting.count} Unresponsive Nodes - Last 6 Hours
         %ul.hidden.last_six_unreporting
           - @last_six_unreporting.each do |node|
+            %li
+              %a{:href => "#"}=node.name
+      %li.nav-header
+        %a{:href => "javascript:void()", :onclick => '$(".hidden.last_day_unreporting").toggle();'} #{@last_day_unreporting.count} Unresponsive Nodes - Last Day
+        %ul.hidden.last_day_unreporting
+          - @last_day_unreporting.each do |node|
             %li
               %a{:href => "#"}=node.name
       %li.nav-header
