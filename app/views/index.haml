@@ -1,62 +1,70 @@
-%div.span3
-  %div.well.sidebar-nav
-    %ul.nav.nav-list
-      %li.nav-header Failed Groups
-      - @failure_groups.each_with_index do |(key, value), i|
-        %li
-          %a{:href => "javascript:void()", :onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
-          %ul{:class => "hidden failure_#{i}"}
-            %li Resources:
-            %ul
-              - key.each do |resource|
-                %li=resource
-          %ul{:class => "hidden failure_#{i}"}
-            %li Nodes
-            %ul
-              - value.each do |machine|
-                %li
-                  %a{:href => "#"}=machine.name
-      -# abstract this crap
-      %li.nav-header 
-        %a{:href => "javascript:void()", :onclick => '$(".hidden.last_hour_unreporting").toggle();'} #{@last_hour_unreporting.count} Unresponsive Nodes - Last Hour
-        %ul.hidden.last_hour_unreporting
-          - @last_hour_unreporting.each do |node|
-            %li
-              %a{:href => "#"}=node.name
-      %li.nav-header 
-        %a{:href => "javascript:void()", :onclick => '$(".hidden.last_six_unreporting").toggle();'} #{@last_six_unreporting.count} Unresponsive Nodes - Last 6 Hours
-        %ul.hidden.last_six_unreporting
-          - @last_six_unreporting.each do |node|
-            %li
-              %a{:href => "#"}=node.name
-      %li.nav-header
-        %a{:href => "javascript:void()", :onclick => '$(".hidden.last_day_unreporting").toggle();'} #{@last_day_unreporting.count} Unresponsive Nodes - Last Day
-        %ul.hidden.last_day_unreporting
-          - @last_day_unreporting.each do |node|
-            %li
-              %a{:href => "#"}=node.name
-      %li.nav-header
-        %a{:href => "javascript:void()", :onclick => '$(".resource_breakdown").toggle();'} Resource Breakdown
-      - @success_groups.each_with_index do |(key, value), i|
-        %li.hidden.resource_breakdown
-          %ul
-            %a{:href => "javascript:void()", :onclick => "$(\".success_#{i}\").toggle();"} #{value.count} Recent Nodes
-            %ul{:class => "hidden success_#{i}"}
-              %li
-                Nodes
-                %ul
-                  - value.each do |node|
-                    %li
-                      %a{:href => "#"}=node.name
-            %ul
-              - key.each do |resource|
-                %li=resource
-
-%div.span9
+%div.span12
   %div.hero-unit
     %h1{:align => "center"} 
-      Nodes - #{@nodes.count}: #{@success.count} pass, #{@failure.count} fail
+      #{@nodes.count} Nodes: #{@success.count} pass, #{@failure.count} fail
     %p{:align => "center"}
       Last Reporting Node: [#{@last_node[:fqdn] rescue "none"}] - #{@last_node.last_report.created_at rescue "nil"}
+
+%div.row-fluid
+  %div.span4
+    %div.well
+      %h3 Failure Groups
+      %ul.nav.nav-list
+        - @failure_groups.each_with_index do |(key, value), i|
+          %li
+            %a{:href => "javascript:void()", :onclick => "$(\".failure_#{i}\").toggle();"} #{value.count} nodes
+            %ul{:class => "hidden failure_#{i}"}
+              %li Resources:
+              %ul
+                - key.each do |resource|
+                  %li=resource
+            %ul{:class => "hidden failure_#{i}"}
+              %li Nodes
+              %ul
+                - value.each do |machine|
+                  %li
+                    %a{:href => "#"}=machine.name
+  %div.span4
+    %div.well
+      %h3 Unreported Nodes
+      %ul.nav.nav-list
+        -# abstract this crap
+        %li.nav-header 
+          %a{:href => "javascript:void()", :onclick => '$(".hidden.last_hour_unreporting").toggle();'} #{@last_hour_unreporting.count} Unresponsive Nodes - Last Hour
+          %ul.hidden.last_hour_unreporting
+            - @last_hour_unreporting.each do |node|
+              %li
+                %a{:href => "#"}=node.name
+        %li.nav-header 
+          %a{:href => "javascript:void()", :onclick => '$(".hidden.last_six_unreporting").toggle();'} #{@last_six_unreporting.count} Unresponsive Nodes - Last 6 Hours
+          %ul.hidden.last_six_unreporting
+            - @last_six_unreporting.each do |node|
+              %li
+                %a{:href => "#"}=node.name
+        %li.nav-header
+          %a{:href => "javascript:void()", :onclick => '$(".hidden.last_day_unreporting").toggle();'} #{@last_day_unreporting.count} Unresponsive Nodes - Last Day
+          %ul.hidden.last_day_unreporting
+            - @last_day_unreporting.each do |node|
+              %li
+                %a{:href => "#"}=node.name
+  %div.span4
+    %div.well
+      %h3 Resource Breakdown
+      %ul.nav.nav-list
+        %li.nav-header
+        - @success_groups.each_with_index do |(key, value), i|
+          %li
+            %ul
+              %a{:href => "javascript:void()", :onclick => "$(\".success_#{i}\").toggle();"} #{value.count} Recent Nodes
+              %ul{:class => "hidden success_#{i}"}
+                %li
+                  Nodes
+                  %ul
+                    - value.each do |node|
+                      %li
+                        %a{:href => "#"}=node.name
+              %ul
+                - key.each do |resource|
+                  %li=resource
 :javascript
   $(".hidden").hide();
