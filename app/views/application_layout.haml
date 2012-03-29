@@ -21,9 +21,9 @@
             %li.active
               %a{:href => "/"} Home
             %li
-              %a{:href => "/"} Nodes
+              %a{:href => "/nodes"} Nodes
           %p.navbar-text.pull-right
-            %a{:href => "#"} Credits
+            %a{:href => "#", "data-toggle" => "modal", "data-target" => ".credits"} Credits
           %span.divider-vertical.pull-right
           %p.navbar-text.pull-right
             #{@nodes.count} reporting nodes
@@ -31,3 +31,9 @@
     %div.container-fluid.well-large
       %div.row-fluid
         = yield
+  %div.credits.hidden.modal.well
+    Written By
+    %a{:href => "mailto:erik+dashboard@hollensbe.org"} Erik Hollensbe
+    &copy; 2012
+:javascript
+  $(".hidden").hide();
