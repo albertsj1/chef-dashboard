@@ -1,7 +1,7 @@
 # Unicorn-specific config
 # Largely borrowed from the Github crew
 
-app_dir = ::File.expand_path(::File.join("..", ::File.dirname(__FILE__)))
+app_dir = ::File.expand_path(::File.join(::File.dirname(__FILE__), ".."))
 worker_processes 4
 
 # Restart any workers that haven't responded in 30 seconds 
