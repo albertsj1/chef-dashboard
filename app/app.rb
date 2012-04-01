@@ -39,5 +39,6 @@ end
 
 put '/report' do
   Node.create_report(Yajl.load(request.body.read))
+  response["Content-Type"] = "application/json"
   return 200
 end
