@@ -65,6 +65,13 @@ after_fork do |server, worker|
       Process::GID.change_privilege(target_gid)
       Process::UID.change_privilege(target_uid)
     end
+
+    log_dir = File.join(app_dir, 'log')
+
+    File.mkdir(log_dir, 0700) rescue nil
+
+    $stdout.reopen(File.join(log_dir, 'stdout.log'), 'w')
+    $stderr.reopen(File.join(log_dir, 'stderr.log'), 'w')
   rescue => e
     if ENV['RACK_ENV'] == 'development'
       STDERR.puts "couldn't change user, oh well"
@@ -73,10 +80,3 @@ after_fork do |server, worker|
     end
   end
 end
-
-log_dir = File.join(app_dir, 'log')
-
-File.mkdir(log_dir, 0700) rescue nil
-
-$stdout = File.open(File.join(log_dir, 'stdout.log'), 'w')
-$stderr = File.open(File.join(log_dir, 'stderr.log'), 'w')
