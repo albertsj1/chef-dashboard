@@ -70,8 +70,8 @@ after_fork do |server, worker|
 
     File.mkdir(log_dir, 0700) rescue nil
 
-    $stdout.reopen(File.join(log_dir, 'stdout.log'), 'w')
-    $stderr.reopen(File.join(log_dir, 'stderr.log'), 'w')
+    $stdout.reopen(File.join(log_dir, 'stdout.log'), 'a')
+    $stderr.reopen(File.join(log_dir, 'stderr.log'), 'a')
   rescue => e
     if ENV['RACK_ENV'] == 'development'
       STDERR.puts "couldn't change user, oh well"
