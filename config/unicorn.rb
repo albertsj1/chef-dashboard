@@ -78,5 +78,5 @@ log_dir = File.join(app_dir, 'log')
 
 File.mkdir(log_dir, 0700) rescue nil
 
-$stdout = File.open(File.join(log_dir, 'stdout.log'))
-$stderr = File.open(File.join(log_dir, 'stderr.log'))
+$stdout = File.open(File.join(log_dir, 'stdout.log'), 'w')
+$stderr = File.open(File.join(log_dir, 'stderr.log'), 'w')
