@@ -55,23 +55,28 @@
             - @last_day_unreporting.each do |node|
               %li
                 %a{:href => "#"}=node.name
-  %div.span4
-    %div.well
-      %h3 
-        %center Resource Breakdown
-      %ul.nav.nav-list
-        %li.nav-header
-        - @success_groups.each_with_index do |(key, value), i|
-          %li
-            %ul
-              %a{:href => "javascript:void()", :onclick => "$(\".success_#{i}\").toggle();"} #{value.count} Recent Nodes
-              %ul{:class => "hidden success_#{i}"}
+  %div.row-fluid
+    %div.span4
+      %div.well.accordion
+        %h3
+          %center Resource Breakdown
+        %div.accordion-group
+          - @success_groups.each_with_index do |(key, value), i|
+            %div.accordion-inner
+              %a.success-link.accordion-heading{:href => "javascript:void()", "data-toggle" => "collapse", "data-target" => ".success#{i}"} #{value.count} nodes
+            %div{:class => "success#{i} collapse"}
+              %ul.nav.nav-tabs
+                %li.active
+                  %a{"data-toggle" => "tab", "data-target" => "#success#{i}resources"} Resources
                 %li
-                  Nodes
+                  %a{"data-toggle" => "tab", "data-target" => "#success#{i}nodes"} Nodes
+
+              %div.tab-content
+                %div.tab-pane.active{:id => "success#{i}resources"}
+                  %ul
+                    - key.each do |resource|
+                      %li=resource
+                %div.tab-pane{:id => "success#{i}nodes"}
                   %ul
                     - value.each do |node|
-                      %li
-                        %a{:href => "#"}=node.name
-              %ul
-                - key.each do |resource|
-                  %li=resource
+                      %li=node.name
