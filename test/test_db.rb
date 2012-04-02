@@ -143,4 +143,13 @@ class TestDB < MiniTest::Unit::TestCase
     assert_raises(ArgumentError) { Node.create_report(report_hash) }
   end
 
+  def test_unreporting_nodes
+    report_hash = get_report_hash
+    node = Node.create_report(report_hash, 7.hours.ago)
+
+    assert_equal(Node.unreporting_nodes(24.hours.ago, 6.hours.ago).to_a.count, 1)
+    refute_equal(Node.unreporting_nodes(2.hours.ago, 1.hours.ago).to_a.count, 1)
+    refute_equal(Node.reporting_nodes.to_a.count, 1)
+  end
+
 end

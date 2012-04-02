@@ -45,8 +45,11 @@ class Node < ActiveRecord::Base
       joins(:reports).
       where("reports.created_at BETWEEN ? and ?", min_time, max_time).
       order("reports.created_at DESC").
-      select("distinct(nodes.id), nodes.*").
-      to_a
+      select("distinct(nodes.id), nodes.*")
+  end
+
+  def self.unreporting_nodes(min_time=2.hours.ago, max_time=1.hour.ago)
+    Node.reporting_nodes(min_time, max_time) - Node.reporting_nodes(max_time)
   end
 
   def last_report
@@ -54,7 +57,7 @@ class Node < ActiveRecord::Base
   end
 
   def self.group_by_execution
-    success, failure = Node.reporting_nodes.partition(&:last_run_success?)
+    success, failure = Node.reporting_nodes.to_a.partition(&:last_run_success?)
     breakdown_proc = proc { |x| x.last_report.resources.map(&:resource).sort } 
     failure_breakdown = failure.group_by(&breakdown_proc)
     success_breakdown = success.group_by(&breakdown_proc)
